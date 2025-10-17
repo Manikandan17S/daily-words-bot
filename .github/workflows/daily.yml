@@ -1,14 +1,13 @@
-name: Daily Words Bot
+name: Daily Words Broadcast
 
 on:
   schedule:
-    - cron:  '30 1 * * *'   # Runs daily at 01:30 UTC → 07:00 IST
+    - cron: '30 1 * * *'    # 01:30 UTC → 07:00 IST
   workflow_dispatch:
 
 jobs:
-  send_words:
+  broadcast:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -18,8 +17,9 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies
-        run: pip install python-telegram-bot
+        run: pip install python-telegram-bot python-dotenv
 
-      - name: Run bot script
-        run: |
-            python bot.py
+      - name: Run broadcast script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python bot.py
