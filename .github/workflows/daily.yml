@@ -1,0 +1,25 @@
+name: Daily Words Bot
+
+on:
+  schedule:
+    - cron:  '30 1 * * *'   # Runs daily at 01:30 UTC → 07:00 IST
+  workflow_dispatch:
+
+jobs:
+  send_words:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install python-telegram-bot
+
+      - name: Run bot script
+        run: |
+            python bot.py
