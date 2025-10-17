@@ -3,7 +3,7 @@ import json, os
 from telegram import Bot
 
 app = Flask(__name__)
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TOKEN = os.getenv("secrets.TELEGRAM_BOT_TOKEN")
 bot = Bot(token=TOKEN)
 SUB_FILE = "subscribers.json"
 
