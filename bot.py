@@ -3,7 +3,7 @@ from telegram import Bot
 from dotenv import load_dotenv
 
 load_dotenv()
-TOKEN = os.getenv("secrets.TELEGRAM_BOT_TOKEN")
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 bot = Bot(token=TOKEN)
 
 # Load subscribers
