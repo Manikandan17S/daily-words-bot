@@ -23,10 +23,9 @@ with open("words.json", "r", encoding="utf-8") as f:
 
 # Database helper functions
 def get_db_connection():
-    return psycopg2.connect(
-        dsn=DATABASE_URL,
-        options='-c client_encoding=UTF8'
-    )
+    conn = psycopg2.connect(DATABASE_URL)
+    conn.set_client_encoding('UTF8')
+    return conn
 
 def init_db():
     conn = get_db_connection()
