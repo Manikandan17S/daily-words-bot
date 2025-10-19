@@ -1,6 +1,7 @@
 from flask import Flask, request
 import os, json, random
 import psycopg2
+from psycopg2 import sql
 from telegram import Bot
 from apscheduler.schedulers.background import BackgroundScheduler
 import asyncio
@@ -22,7 +23,10 @@ with open("words.json", "r", encoding="utf-8") as f:
 
 # Database helper functions
 def get_db_connection():
-    return psycopg2.connect(DATABASE_URL)
+    return psycopg2.connect(
+        dsn=DATABASE_URL,
+        options='-c client_encoding=UTF8'
+    )
 
 def init_db():
     conn = get_db_connection()
