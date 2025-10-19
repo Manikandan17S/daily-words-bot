@@ -1,7 +1,6 @@
 flask
 python-telegram-bot
-pymongo
+psycopg2-binary
 APScheduler
 gunicorn
 python-dotenv
-certifi
