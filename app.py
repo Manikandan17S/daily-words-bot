@@ -26,7 +26,8 @@ MONGO_URI = f"mongodb+srv://{MONGO_USERNAME}:{MONGO_PASSWORD}@{MONGO_CLUSTER}/da
 # MongoDB setup
 client = MongoClient(
     MONGO_URI,
-    tlsCAFile=certifi.where()
+    tlsCAFile=certifi.where(),
+    serverSelectionTimeoutMS=5000
 )
 db = client["dailywords"]
 subs_collection = db["subscribers"]
