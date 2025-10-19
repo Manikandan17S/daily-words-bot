@@ -4,3 +4,4 @@ pymongo
 APScheduler
 gunicorn
 python-dotenv
+certifi

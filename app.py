@@ -2,9 +2,13 @@ from flask import Flask, request
 import os, json, random
 from telegram import Bot, Update
 from pymongo import MongoClient
+import certifi
 from apscheduler.schedulers.background import BackgroundScheduler
 import asyncio
 from urllib.parse import quote_plus
+from dotenv import load_dotenv
+load_dotenv()
+
 
 app = Flask(__name__)
 
@@ -20,7 +24,10 @@ MONGO_CLUSTER = os.getenv("MONGO_CLUSTER", "")
 MONGO_URI = f"mongodb+srv://{MONGO_USERNAME}:{MONGO_PASSWORD}@{MONGO_CLUSTER}/dailywords?retryWrites=true&w=majority"
 
 # MongoDB setup
-client = MongoClient(MONGO_URI)
+client = MongoClient(
+    MONGO_URI,
+    tlsCAFile=certifi.where()
+)
 db = client["dailywords"]
 subs_collection = db["subscribers"]
 
