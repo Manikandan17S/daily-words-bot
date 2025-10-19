@@ -1,7 +1,5 @@
 from flask import Flask, request
-import os, json, random
-import psycopg2
-from psycopg2 import sql
+import os, json, random, sqlite3
 from telegram import Bot
 from apscheduler.schedulers.background import BackgroundScheduler
 import asyncio
@@ -12,7 +10,7 @@ app = Flask(__name__)
 
 # Environment variables
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-DATABASE_URL = os.getenv("DATABASE_URL")
+DB_FILE = "subscribers.db"
 
 # Telegram bot
 bot = Bot(token=TOKEN)
@@ -23,20 +21,18 @@ with open("words.json", "r", encoding="utf-8") as f:
 
 # Database helper functions
 def get_db_connection():
-    conn = psycopg2.connect(DATABASE_URL)
-    conn.set_client_encoding('UTF8')
+    conn = sqlite3.connect(DB_FILE)
+    conn.row_factory = sqlite3.Row
     return conn
 
 def init_db():
     conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("""
+    conn.execute("""
         CREATE TABLE IF NOT EXISTS subscribers (
-            chat_id BIGINT PRIMARY KEY
+            chat_id INTEGER PRIMARY KEY
         )
     """)
     conn.commit()
-    cur.close()
     conn.close()
 
 # Initialize database on startup
@@ -53,16 +49,13 @@ def webhook():
         print(f"New subscriber: {chat_id}", flush=True)
         
         conn = get_db_connection()
-        cur = conn.cursor()
         try:
-            cur.execute("INSERT INTO subscribers (chat_id) VALUES (%s) ON CONFLICT DO NOTHING", (chat_id,))
+            conn.execute("INSERT OR IGNORE INTO subscribers (chat_id) VALUES (?)", (chat_id,))
             conn.commit()
             bot.send_message(chat_id=chat_id, text="✅ Subscribed! You'll receive daily English-Tamil words every morning at 7 AM IST. 🌅")
         except Exception as e:
             print(f"Error: {e}", flush=True)
-            bot.send_message(chat_id=chat_id, text="You're already subscribed! 💙")
         finally:
-            cur.close()
             conn.close()
     return "OK"
 
@@ -77,7 +70,6 @@ async def send_daily_words():
     cur = conn.cursor()
     cur.execute("SELECT chat_id FROM subscribers")
     subscribers = [row[0] for row in cur.fetchall()]
-    cur.close()
     conn.close()
     
     if not subscribers:
