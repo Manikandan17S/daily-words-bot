@@ -83,7 +83,7 @@ async def send_daily_words():
     
     for chat_id in subscribers:
         try:
-            await bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
+            bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
             print(f"Sent to {chat_id}", flush=True)
         except Exception as e:
             print(f"Failed to send to {chat_id}: {e}", flush=True)
