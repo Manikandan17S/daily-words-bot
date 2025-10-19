@@ -52,7 +52,10 @@ def webhook():
         try:
             conn.execute("INSERT OR IGNORE INTO subscribers (chat_id) VALUES (?)", (chat_id,))
             conn.commit()
-            bot.send_message(chat_id=chat_id, text="✅ Subscribed! You'll receive daily English-Tamil words every morning at 7 AM IST. 🌅")
+            asyncio.run(bot.send_message(
+            chat_id=chat_id,
+            text="✅ Subscribed! You'll receive daily English-Tamil words every morning at 7 AM IST. 🌅"
+        ))
         except Exception as e:
             print(f"Error: {e}", flush=True)
         finally:
