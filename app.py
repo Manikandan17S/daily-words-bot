@@ -10,7 +10,14 @@ app = Flask(__name__)
 
 # Environment variables
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-MONGO_URI = os.getenv("MONGO_URI")
+
+# Get MongoDB credentials separately and encode them
+MONGO_USERNAME = quote_plus(os.getenv("MONGO_USERNAME", ""))
+MONGO_PASSWORD = quote_plus(os.getenv("MONGO_PASSWORD", ""))
+MONGO_CLUSTER = os.getenv("MONGO_CLUSTER", "")
+
+# Build MongoDB URI with encoded credentials
+MONGO_URI = f"mongodb+srv://{MONGO_USERNAME}:{MONGO_PASSWORD}@{MONGO_CLUSTER}/dailywords?retryWrites=true&w=majority"
 
 # MongoDB setup
 client = MongoClient(MONGO_URI)
