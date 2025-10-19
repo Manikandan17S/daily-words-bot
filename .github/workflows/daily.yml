@@ -22,4 +22,5 @@ jobs:
       - name: Run broadcast script
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
         run: python bot.py
