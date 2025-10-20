@@ -69,6 +69,7 @@ def home():
 
 # Broadcast function
 async def send_daily_words():
+    print("🚀 Starting daily broadcast...", flush=True)
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT chat_id FROM subscribers")
@@ -79,6 +80,8 @@ async def send_daily_words():
         print("No subscribers yet.", flush=True)
         return
     
+    print(f"Found {len(subscribers)} subscribers", flush=True)
+    
     # Pick 5 random words
     selection = random.sample(words, k=5)
     lines = [f"• *{w['word']}* – _{w['tamil']}_" for w in selection]
@@ -86,10 +89,11 @@ async def send_daily_words():
     
     for chat_id in subscribers:
         try:
-            bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
-            print(f"Sent to {chat_id}", flush=True)
+            await bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
+            print(f"✅ Sent to {chat_id}", flush=True)
         except Exception as e:
-            print(f"Failed to send to {chat_id}: {e}", flush=True)
+            print(f"❌ Failed to send to {chat_id}: {e}", flush=True)
+
 
 # Schedule daily broadcast at 7:00 AM IST
 def scheduled_broadcast():
@@ -99,10 +103,8 @@ scheduler = BackgroundScheduler()
 scheduler.add_job(func=scheduled_broadcast, trigger="cron", hour=7, minute=0, timezone="Asia/Kolkata")
 scheduler.start()
 
+print(f"Scheduler started. Next broadcast: {scheduler.get_jobs()}", flush=True)
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
-if os.getenv("TEST_NOW") == "true":
-    print("🧪 TEST MODE: Running broadcast immediately...", flush=True)
-    scheduled_broadcast()
