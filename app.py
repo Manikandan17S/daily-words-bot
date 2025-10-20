@@ -100,7 +100,7 @@ async def send_daily_words():
     
     for chat_id in subscribers:
         try:
-            bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
+            await bot.send_message(chat_id=chat_id, text=message, parse_mode="Markdown")
             print(f"✅ Sent to {chat_id}", flush=True)
         except Exception as e:
             print(f"❌ Failed to send to {chat_id}: {e}", flush=True)
@@ -110,7 +110,7 @@ def scheduled_broadcast():
     asyncio.run(send_daily_words())
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=scheduled_broadcast, trigger="cron", hour=15, minute=0, timezone="Asia/Kolkata")
+scheduler.add_job(func=scheduled_broadcast, trigger="cron", hour=16, minute=15, timezone="Asia/Kolkata")
 scheduler.start()
 
 print(f"✅ Scheduler started. Next broadcast: {scheduler.get_jobs()}", flush=True)
