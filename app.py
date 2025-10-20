@@ -102,3 +102,7 @@ scheduler.start()
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
+if os.getenv("TEST_NOW") == "true":
+    print("🧪 TEST MODE: Running broadcast immediately...", flush=True)
+    scheduled_broadcast()
