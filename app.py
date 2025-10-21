@@ -110,7 +110,7 @@ def scheduled_broadcast():
     asyncio.run(send_daily_words())
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=scheduled_broadcast, trigger="cron", hour=16, minute=15, timezone="Asia/Kolkata")
+scheduler.add_job(func=scheduled_broadcast, trigger="cron", hour=8, minute=15, timezone="Asia/Kolkata")
 scheduler.start()
 
 print(f"✅ Scheduler started. Next broadcast: {scheduler.get_jobs()}", flush=True)
